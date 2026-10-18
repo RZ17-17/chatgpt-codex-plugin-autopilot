@@ -1,0 +1,33 @@
+name: ChatGPT Codex Plugin Autopilot
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  autopilot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Plugin Autopilot
+        uses: imMamdouhaboammar/chatgpt-codex-plugin-autopilot@v1
+        with:
+          path: '.'
+          action: 'auto'
+          output-dir: 'dist'
+          fail-on-error: 'true'
+          summary: 'true'
+
+      - name: Upload generated files
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: plugin-autopilot-output
+          path: dist/
+          if-no-files-found: warn
